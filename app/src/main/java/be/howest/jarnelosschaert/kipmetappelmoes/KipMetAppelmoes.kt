@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.HomeScreen
-import be.howest.jarnelosschaert.kipmetappelmoes.ui.RestaurantScreen
-import be.howest.jarnelosschaert.kipmetappelmoes.ui.SearchScreen
+import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.FavoritesScreen
+import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.MapScreen
+import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.SearchScreen
 
 sealed class BottomNavigationScreens(val route: String, val label: String, val icon: ImageVector) {
     object Home : BottomNavigationScreens("home", "Home", Icons.Filled.Home)
@@ -56,10 +56,10 @@ private fun MainScreenNavigationConfigurations(
             SearchScreen(modifier)
         }
         composable(BottomNavigationScreens.Favorites.route) {
-            SearchScreen(modifier)
+            FavoritesScreen(modifier)
         }
         composable(BottomNavigationScreens.Map.route) {
-            SearchScreen(modifier)
+            MapScreen(modifier)
         }
     }
 }

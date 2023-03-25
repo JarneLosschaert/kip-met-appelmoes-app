@@ -18,6 +18,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import be.howest.jarnelosschaert.kipmetappelmoes.R
+import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.BasicSpacer
+
+val eatChoices = mapOf(
+    "Ontbijt" to R.drawable.ontbijt,
+    "Lunch" to R.drawable.lunch,
+    "Diner" to R.drawable.diner,
+    "Snacks" to R.drawable.snacks,
+    "Drankjes" to R.drawable.drinks,
+    "takeout" to R.drawable.takeout
+)
 
 @Composable
 fun HomeScreen(
@@ -27,38 +37,46 @@ fun HomeScreen(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(R.drawable.logo),
-            contentDescription = null,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(30.dp))
-        Text(
-            text = "Hi Jarne, waar ben je op naar zoek?",
-            textAlign = TextAlign.Center,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.height(30.dp))
-        val eatChoices = mapOf(
-            "Ontbijt" to R.drawable.ontbijt,
-            "Lunch" to R.drawable.lunch,
-            "Diner" to R.drawable.diner,
-            "Snacks" to R.drawable.snacks,
-            "Drankjes" to R.drawable.drinks,
-            "takeout" to R.drawable.takeout
-        )
-        LazyVerticalGrid(
-            modifier = Modifier.padding(10.dp),
-            columns = GridCells.Fixed(3),
-            content = {
+        Logo()
+        BasicSpacer(height = 30)
+        Title()
+        BasicSpacer(height = 30)
+        EatChoices()
+    }
+}
+
+@Composable
+fun Logo() {
+    Image(
+        painter = painterResource(R.drawable.logo),
+        contentDescription = null,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+fun Title() {
+    Text(
+        text = "Hi Jarne, waar ben je op naar zoek?",
+        textAlign = TextAlign.Center,
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold
+    )
+}
+
+@Composable
+fun EatChoices() {
+    LazyVerticalGrid(
+        modifier = Modifier.padding(10.dp),
+        columns = GridCells.Fixed(3),
+        content = {
             items(eatChoices.size) { index ->
                 val entry = eatChoices.entries.elementAt(index)
                 val (choice, image) = entry
                 EatChoice(choice, image)
             }
-        })
-    }
+        }
+    )
 }
 
 @Composable
