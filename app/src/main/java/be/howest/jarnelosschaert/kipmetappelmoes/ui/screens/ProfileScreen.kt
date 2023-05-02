@@ -12,42 +12,48 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import be.howest.jarnelosschaert.kipmetappelmoes.data.DummyData
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.BasicSpacer
 import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import be.howest.jarnelosschaert.kipmetappelmoes.R
+import be.howest.jarnelosschaert.kipmetappelmoes.data.models.User
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.GeneralChoicePopup
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.GeneralPopup
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.GeneralTextPopup
+import be.howest.jarnelosschaert.kipmetappelmoes.uiState
 
-sealed class ProfileTabs(open val name: String, open val icon: ImageVector)
+sealed class ProfileTabs(open val name: Int, open val icon: ImageVector)
 
 sealed class ProfileTabsScreen(
-    override val name: String,
+    override val name: Int,
     override val icon: ImageVector,
     val route: String
 ) : ProfileTabs(name, icon) {
-    object Account : ProfileTabsScreen("Account beheren", Icons.Default.AccountCircle, "account")
-    object Reviews : ProfileTabsScreen("Beoordelingen", Icons.Default.Star, "reviews")
-    object Favorites : ProfileTabsScreen("Favorieten", Icons.Default.Favorite, "favorites")
-    object Settings : ProfileTabsScreen("Instellingen", Icons.Default.Settings, "settings")
+    object Account : ProfileTabsScreen(R.string.tab_account, Icons.Default.AccountCircle, "account")
+    object Reviews : ProfileTabsScreen(R.string.tab_reviews, Icons.Default.Star, "reviews")
+    object Favorites : ProfileTabsScreen(R.string.tab_favorites, Icons.Default.Favorite, "favorites")
+    object Settings : ProfileTabsScreen(R.string.tab_settings, Icons.Default.Settings, "settings")
 }
 
 sealed class ProfileTabsPopup(
-    override val name: String,
+    override val name: Int,
     override val icon: ImageVector,
     val popup: @Composable (() -> Unit) -> Unit
 ) : ProfileTabs(name, icon) {
-    object Nothing : ProfileTabsPopup("", Icons.Default.AccountCircle, {})
-    object LogOut : ProfileTabsPopup("Uitloggen", Icons.Default.ExitToApp, { onDismiss ->
+    object Nothing : ProfileTabsPopup(0, Icons.Default.AccountCircle, {})
+    object LogOut : ProfileTabsPopup(R.string.tab_logout, Icons.Default.ExitToApp, { onDismiss ->
         GeneralChoicePopup(
             title = "Uitloggen",
             content = "Ben je zeker dat je wilt uitloggen?",
             confirmButton = "Uitloggen",
             toastText = "Je bent succesvol uitgelogd!",
-            onDismiss = { onDismiss() }
+            onDismiss = { onDismiss() },
+            onConfirm = {
+                uiState.currentUser = User(-1, "", "", listOf())
+            }
         )})
-    object Help : ProfileTabsPopup("Help", Icons.Default.Call, {onDismiss ->
+    object Help : ProfileTabsPopup(R.string.tab_help, Icons.Default.Call, { onDismiss ->
         GeneralTextPopup(
             title = "Help",
             label = "Heb je een vraag over de app? Laat het ons weten!",
@@ -55,7 +61,7 @@ sealed class ProfileTabsPopup(
             toastText = "Je vraag is succesvol verstuurd!",
             onDismiss = { onDismiss() }
         )})
-    object Problem : ProfileTabsPopup("Probleem rapporteren", Icons.Default.Warning, { onDismiss ->
+    object Problem : ProfileTabsPopup(R.string.tab_problem, Icons.Default.Warning, { onDismiss ->
         GeneralTextPopup(
             title = "Probleem rapporteren",
             label = "Heb je een probleem met de app? Laat het ons weten!",
@@ -63,10 +69,10 @@ sealed class ProfileTabsPopup(
             toastText = "Je probleem is succesvol verstuurd!",
             onDismiss = { onDismiss() }
         )})
-    object Info : ProfileTabsPopup("Info", Icons.Default.Info, { onDismiss ->
+    object Info : ProfileTabsPopup(R.string.tab_info, Icons.Default.Info, { onDismiss ->
         GeneralPopup(
             title = "Info",
-            content = "Kip met appelmoes is een app gemaakt door Jarne losschaert voor het Howest project 'Applicatieontwikkeling 2'.",
+            content = "Kip met appelmoes is een app gemaakt door Jarne losschaert voor het Howest project 'Native Mobile Apps'.",
             confirmButton = "Ok",
             onDismiss = { onDismiss() },
         )})
@@ -100,7 +106,6 @@ fun ProfileScreen(modifier: Modifier = Modifier, onScreenChange: (String) -> Uni
 
 @Composable
 fun HeaderProfile() {
-    val me = DummyData.me
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -111,7 +116,7 @@ fun HeaderProfile() {
     ) {
         Icon(Icons.Default.AccountCircle, "Profiel", modifier = Modifier.size(100.dp), tint = MaterialTheme.colors.primaryVariant)
         BasicSpacer()
-        Text(text = me.firstName + " " + me.lastName, color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
+        Text(text = uiState.currentUser.username, color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -138,9 +143,9 @@ fun TabItem(modifier: Modifier, tab: ProfileTabs, onScreenChange: (String) -> Un
             Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(tab.icon, tab.name, tint = MaterialTheme.colors.primary, modifier = Modifier.size(30.dp))
+            Icon(tab.icon, null, tint = MaterialTheme.colors.primary, modifier = Modifier.size(30.dp))
             BasicSpacer()
-            Text(text = tab.name, color = MaterialTheme.colors.primaryVariant)
+            Text(text = stringResource(id = tab.name), color = MaterialTheme.colors.primaryVariant)
         }
         if (tab is ProfileTabsScreen) {
             Icon(Icons.Default.ArrowForward, "Naar", modifier = Modifier.align(Alignment.CenterEnd), tint = MaterialTheme.colors.primary)

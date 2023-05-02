@@ -23,13 +23,13 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.DpOffset
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.*
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.RestaurantList
-import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.TagList
+import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.TagList
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.BasicSpacer
+import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.NothingFound
 
 @Composable
 fun SearchScreen(
@@ -59,30 +59,12 @@ fun SearchScreen(
         )
         Tags(tags = tags, tagsClicked = tagsClicked, onTagClicked = onTagClicked)
         if (restaurantList.isEmpty()) {
-            NothingFound()
+            NothingFound(stringResource(id = R.string.no_restaurants_found))
         } else {
             RestaurantList(restaurants = restaurantList, onRestaurantClicked = onRestaurantClicked)
         }
     }
 }
-
-@Composable
-fun NothingFound() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = stringResource(id = R.string.no_restaurants_found),
-            color = MaterialTheme.colors.primary,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-    }
-}
-
 @Composable
 fun Tags(tags: List<Tag>, tagsClicked: List<Tag>, onTagClicked: (Tag) -> Unit) {
     BasicSpacer()

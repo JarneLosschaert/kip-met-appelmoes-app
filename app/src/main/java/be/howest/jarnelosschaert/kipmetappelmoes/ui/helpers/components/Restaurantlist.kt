@@ -25,6 +25,7 @@ import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Restaurant
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.calculateAverageRating
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.getSortedEatingOptions
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.getTodayOpeningHours
+import be.howest.jarnelosschaert.kipmetappelmoes.uiState
 import coil.compose.rememberAsyncImagePainter
 
 @Composable
@@ -100,11 +101,10 @@ fun StarsAndHart(restaurant: Restaurant, modifier: Modifier) {
             val averageRating = calculateAverageRating(restaurant)
             Stars(amount = averageRating)
         }
-        if (DummyData.me.favorites.contains(restaurant)) {
+        if (uiState.currentUser.favorites.contains(restaurant.id)) {
             Icon(
                 Icons.Default.Favorite,
                 contentDescription = null,
-                 //#a83f39,
                 tint = androidx.compose.ui.graphics.Color(0xFFFF4033),
                 modifier = Modifier
                     .width(25.dp)

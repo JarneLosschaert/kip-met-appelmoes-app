@@ -6,51 +6,32 @@ import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Review
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Tag
 import be.howest.jarnelosschaert.kipmetappelmoes.data.repos.DummyRestaurantRepo
 import be.howest.jarnelosschaert.kipmetappelmoes.data.repos.IRestaurantRepo
+import be.howest.jarnelosschaert.kipmetappelmoes.uiState
 import java.time.LocalDate
 
 class RestaurantController() {
 
-    private val repo: IRestaurantRepo = getRepo()
-
-    private fun getRepo(): IRestaurantRepo {
-        return if (online()) {
-            DummyRestaurantRepo()
-        } else {
-            DummyRestaurantRepo()
-        }
-    }
-
-    private fun online() : Boolean {
-        return false
-    }
+    private val restaurantRepo: IRestaurantRepo = DummyRestaurantRepo()
 
     fun getAllRestaurants(): List<Restaurant> {
-        return repo.getAllRestaurants()
+        return restaurantRepo.getAllRestaurants()
     }
 
-    fun getRestaurants(tags: List<Tag>, search: String = ""): List<Restaurant> {
-        return repo.getRestaurants(tags, search)
+    fun getRestaurantsByFilter(tags: List<Tag>, search: String = ""): List<Restaurant> {
+        return restaurantRepo.getRestaurantsByFilter(tags, search)
     }
 
-    fun addReview(content: String, rating: Int, restaurant: Restaurant) {
-        val user = DummyData.me
-        val review = Review(0, user, content, rating, LocalDate.now())
-        repo.addReview(review, restaurant)
-    }
-
-    fun addFavorite(restaurant: Restaurant) {
-        repo.addFavorite(restaurant)
-    }
-
-    fun removeFavorite(restaurant: Restaurant) {
-        repo.removeFavorite(restaurant)
-    }
-
-    fun getFavorites(): List<Restaurant> {
-        return repo.getFavorites()
+    fun getRestaurantsById(ids: List<Int>): List<Restaurant> {
+        return restaurantRepo.getRestaurantsById(ids)
     }
 
     fun getRestaurant(id: Int): Restaurant {
-        return repo.getRestaurant(id)
+        return restaurantRepo.getRestaurant(id)
+    }
+
+    fun addReview(content: String, rating: Int, restaurant: Restaurant) {
+        val user = uiState.currentUser
+        val review = Review(0, user, content, rating, LocalDate.now())
+        restaurantRepo.addReview(review, restaurant)
     }
 }

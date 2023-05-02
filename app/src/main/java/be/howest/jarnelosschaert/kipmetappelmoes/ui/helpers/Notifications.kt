@@ -23,7 +23,7 @@ const val NOTIFICATION_ID = 0
 fun HandleNotifications() {
     val context = LocalContext.current
     val notification = OneTimeWorkRequestBuilder<NotificationWorker>()
-        .setInitialDelay(24, TimeUnit.HOURS)
+        .setInitialDelay(1, TimeUnit.DAYS)
         .build()
     WorkManager.getInstance(context).enqueue(notification)
 }
@@ -34,7 +34,7 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
         createNotificationChannel()
 
         val notification = NotificationCompat.Builder(applicationContext, "default")
-            .setContentTitle("Kip met Appelmoes")
+            .setContentTitle("Kip met appelmoes")
             .setContentText("Heb je al een restaurant gevonden?")
             .setSmallIcon(R.drawable.chicken)
             .setVibrate(LongArray(0))

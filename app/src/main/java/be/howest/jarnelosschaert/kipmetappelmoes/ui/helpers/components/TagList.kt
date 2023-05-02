@@ -1,4 +1,4 @@
-package be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers
+package be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,7 +11,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Tag

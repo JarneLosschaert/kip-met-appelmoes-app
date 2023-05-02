@@ -1,8 +1,6 @@
 package be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.profileTabs
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -16,46 +14,37 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import be.howest.jarnelosschaert.kipmetappelmoes.R
-import be.howest.jarnelosschaert.kipmetappelmoes.controller
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.RestaurantList
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Restaurant
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.BasicSpacer
+import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.NothingFound
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.TitleProfileTab
+import be.howest.jarnelosschaert.kipmetappelmoes.uiState
 
 @Composable
-fun FavoritesScreen(modifier: Modifier = Modifier, onRestaurantClicked: (Restaurant) -> Unit = {}, onGoBack: () -> Unit = {}) {
+fun FavoritesScreen(modifier: Modifier = Modifier, favorites: List<Restaurant>, onRestaurantClicked: (Restaurant) -> Unit = {}, onGoBack: () -> Unit = {}) {
     Column(
         modifier = modifier
             .padding(horizontal = 10.dp)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TitleProfileTab(title = "Favorieten", onGoBack = onGoBack)
+        TitleProfileTab(title = stringResource(R.string.title_favorites), onGoBack = onGoBack)
         BasicSpacer()
-       RestaurantList(restaurants = controller.getFavorites(), onRestaurantClicked = onRestaurantClicked)
+        if (uiState.currentUser.id == -1) {
+            NothingFound(text = stringResource(R.string.loginfirst, stringResource(R.string.favorites)))
+        } else {
+            if (favorites.isEmpty()) {
+                NothingFound(text = stringResource(R.string.no_favorites))
+            } else {
+                RestaurantList(restaurants = favorites, onRestaurantClicked = onRestaurantClicked)
+            }
+        }
     }
-}
-
-@Composable
-fun RestaurantTitle() {
-    Text(
-        text = stringResource(R.string.title_favorites),
-        fontSize = 25.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(top = 10.dp),
-        color = MaterialTheme.colors.primaryVariant,
-        textAlign = TextAlign.Center
-    )
-
-    Divider(
-        color = MaterialTheme.colors.primaryVariant,
-        thickness = 2.dp,
-        modifier = Modifier.padding(top = 10.dp)
-    )
 }
 
 @Preview
 @Composable
 fun FavoritesPreview() {
-    FavoritesScreen()
+    FavoritesScreen( favorites = listOf())
 }

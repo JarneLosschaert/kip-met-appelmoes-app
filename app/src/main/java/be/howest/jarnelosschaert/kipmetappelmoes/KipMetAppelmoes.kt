@@ -1,16 +1,14 @@
 package be.howest.jarnelosschaert.kipmetappelmoes
 
-import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import be.howest.jarnelosschaert.kipmetappelmoes.data.UiState
@@ -19,12 +17,15 @@ import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Restaurant
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.SortType
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Tag
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.RestaurantController
+import be.howest.jarnelosschaert.kipmetappelmoes.ui.UserController
+import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.HandleNotifications
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.HomeScreen
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.getSortedRestaurants
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.*
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.profileTabs.AccountScreen
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.profileTabs.FavoritesScreen
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.profileTabs.SettingsScreen
+import be.howest.jarnelosschaert.test.data.MainViewModel
 
 sealed class BottomNavigationScreens(val route: String, val label: String, val icon: ImageVector) {
     object Home : BottomNavigationScreens("home", "Home", Icons.Filled.Home)
@@ -42,13 +43,16 @@ sealed class OtherScreens(val route: String) {
 }
 
 val uiState = UiState()
-val controller = RestaurantController()
 
 
 @Composable
-fun KipMetAppelmoesApp() {
-    val navController = rememberNavController()
+fun KipMetAppelmoesApp(viewModel: MainViewModel) {
+    HandleNotifications()
 
+    val allProducts by viewModel.allUsers.observeAsState(listOf())
+    val searchResults by viewModel.searchResults.observeAsState(listOf())
+
+    val navController = rememberNavController()
     val bottomNavigationItems = listOf(
         BottomNavigationScreens.Home,
         BottomNavigationScreens.Search,
@@ -64,19 +68,25 @@ fun KipMetAppelmoesApp() {
         },
         content = { innerPadding ->
             MainScreenNavigationConfigurations(
-                navController,
-                Modifier.padding(innerPadding),
-                onNavigation = { pageClicked = it })
+                modifier = Modifier.padding(innerPadding),
+                navController = navController,
+                onNavigation = { pageClicked = it },
+                viewModel = viewModel
+            )
         }
     )
 }
 
 @Composable
 private fun MainScreenNavigationConfigurations(
-    navController: NavHostController,
     modifier: Modifier = Modifier,
-    onNavigation: (String) -> Unit
-) {
+    navController: NavHostController,
+    onNavigation: (String) -> Unit,
+    viewModel: MainViewModel
+    ) {
+    val restaurantController = RestaurantController()
+    val userController = UserController(viewModel = viewModel)
+
     NavHost(navController, startDestination = BottomNavigationScreens.Home.route) {
         composable(BottomNavigationScreens.Home.route) {
             HomeScreen(modifier = modifier, onEatingOptionClicked = { eatingOption: EatingOption ->
@@ -91,7 +101,7 @@ private fun MainScreenNavigationConfigurations(
                 search = uiState.search,
                 sortType = uiState.sortType,
                 restaurantList = getSortedRestaurants(
-                    controller.getRestaurants(
+                    restaurantController.getRestaurantsByFilter(
                         uiState.tagsClicked,
                         uiState.search
                     ), uiState.sortType
@@ -124,25 +134,40 @@ private fun MainScreenNavigationConfigurations(
             onNavigation(BottomNavigationScreens.Profile.route)
         }
         composable(BottomNavigationScreens.Map.route) {
-            MapScreen(modifier = modifier, restaurants = controller.getAllRestaurants())
+            MapScreen(modifier = modifier, restaurants = restaurantController.getAllRestaurants())
             onNavigation(BottomNavigationScreens.Map.route)
         }
         composable(OtherScreens.Restaurant.route) {
             RestaurantScreen(modifier = modifier, restaurant = uiState.restaurantClicked, onReviewSubmitted = {
-                uiState.restaurantClicked = controller.getRestaurant(uiState.restaurantClicked.id)
-            },
-                onGoBack = {
+                uiState.restaurantClicked = restaurantController.getRestaurant(uiState.restaurantClicked.id)
+            }, onGoBack = {
                     navController.navigate(BottomNavigationScreens.Search.route)
+                },
+                onFavoriteClicked = { restaurant: Restaurant ->
+                    if (uiState.currentUser.favorites.contains(restaurant.id)) {
+                        userController.removeFavorite(restaurant)
+                    } else {
+                        userController.addFavorite(restaurant)
+                    }
+                },
+                addReview = { restaurant: Restaurant, content: String, rating: Int, ->
+                    restaurantController.addReview(content = content, rating = rating, restaurant = restaurant)
                 }
             )
         }
         composable(OtherScreens.Account.route) {
             AccountScreen(modifier = modifier, onGoBack = {
                 navController.navigate(BottomNavigationScreens.Profile.route)
+            }, onLogin = {username, password ->
+                userController.loginUser(username, password)
+            }, onLoginSuccess = {username ->
+                uiState.currentUser = userController.getUser(username)
+            }, onRegister = {username, password ->
+                userController.registerUser(username, password)
             })
         }
         composable(OtherScreens.Favorites.route) {
-            FavoritesScreen(modifier = modifier,
+            FavoritesScreen(modifier = modifier, favorites = restaurantController.getRestaurantsById(uiState.currentUser.favorites),
                 onRestaurantClicked = { restaurant: Restaurant ->
                     uiState.restaurantClicked = restaurant
                     navController.navigate(OtherScreens.Restaurant.route)

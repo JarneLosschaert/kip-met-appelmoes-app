@@ -36,4 +36,48 @@
     <string name="sort_distance">afstand</string>
     <string name="sort_rating">beoordeling</string>
     <string name="no_restaurants_found">Geen restaurant gevonden</string>
+    <string name="closed">Gesloten</string>
+    <string name="today">(vandaag)</string>
+
+    <string name="ago">(%1s %2s geleden)</string>
+    <string name="title_account">Account</string>
+    <string name="logout">Uitloggen</string>
+    <string name="login">Log in</string>
+    <string name="register">Registreer</string>
+    <string name="popuptitle_login">Inloggen</string>
+    <string name="succesfull_login">Succesvol ingelogd</string>
+    <string name="succesfull_register">Account aangemaakt</string>
+    <string name="popuptitle_register">Registreren</string>
+    <string name="username">username</string>
+    <string name="password">paswoord</string>
+    <string name="failed_login">Username of paswoord is niet juist</string>
+    <string name="loginfirst">Log eerst in om je %1s te zien</string>
+    <string name="favorites">favorieten</string>
+    <string name="no_favorites">Nog geen favorieten</string>
+    <string name="title_ratings">Beoordelingen</string>
+    <string name="ratings">beoordelingen</string>
+    <string name="title_settings">Instellingen</string>
+    <string name="reviews_thanks">Bedankt voor de beoordeling!</string>
+    <string name="you_are_welcome">Graag gedaan!</string>
+    <string name="tab_account">Account beheren</string>
+    <string name="tab_reviews">Beoordelingen</string>
+    <string name="tab_favorites">Favorieten</string>
+    <string name="tab_settings">Instellingen</string>
+    <string name="tab_logout">Uitloggen</string>
+    <string name="tab_help">Help</string>
+    <string name="tab_problem">Probleem rapporteren</string>
+    <string name="tab_info">Info</string>
+
+    <plurals name="days">
+        <item quantity="one">dag</item>
+        <item quantity="other">dagen</item>
+    </plurals>
+    <plurals name="months">
+        <item quantity="one">maand</item>
+        <item quantity="other">maanden</item>
+    </plurals>
+    <plurals name="years">
+        <item quantity="one">jaar</item>
+        <item quantity="other">jaar</item>
+    </plurals>
 </resources>

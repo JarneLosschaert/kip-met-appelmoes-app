@@ -1,10 +1,16 @@
 package be.howest.jarnelosschaert.kipmetappelmoes.data.models
 
-data class User(
-    val id: Int,
-    val firstName: String,
-    val lastName: String,
-    val email: String,
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+
+@Entity(tableName = "users")
+data class User (
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "userId")
+    var id: Int = 0,
+    val username: String,
     val password: String,
-    val favorites: List<Restaurant>
+    var favorites: List<Int>
 )

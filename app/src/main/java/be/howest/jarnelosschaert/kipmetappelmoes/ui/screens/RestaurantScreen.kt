@@ -28,10 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import be.howest.jarnelosschaert.kipmetappelmoes.R
-import be.howest.jarnelosschaert.kipmetappelmoes.data.DummyData.restaurants
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Restaurant
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.Stars
-import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.TagList
+import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.TagList
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.timeAgo
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -48,10 +47,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
-import be.howest.jarnelosschaert.kipmetappelmoes.controller
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.calculateAverageRating
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.BasicSpacer
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.GeneralPopup
+import be.howest.jarnelosschaert.kipmetappelmoes.uiState
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -64,14 +63,16 @@ fun RestaurantScreen(
     modifier: Modifier = Modifier,
     restaurant: Restaurant,
     onReviewSubmitted: () -> Unit,
-    onGoBack: () -> Unit
+    onGoBack: () -> Unit,
+    onFavoriteClicked: (Restaurant) -> Unit,
+    addReview: (Restaurant, String, Int) -> Unit
 ) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
     ) {
         item {
-            HeaderRestaurant(restaurant = restaurant, onGoBack)
+            HeaderRestaurant(restaurant = restaurant, onGoBack = onGoBack, onFavoriteClicked = onFavoriteClicked)
             BasicSpacer()
             RestaurantTitle(restaurant = restaurant)
             Column(
@@ -81,7 +82,7 @@ fun RestaurantScreen(
                 Info(restaurant)
                 EatingOptions(restaurant)
                 ChildFriendliness(restaurant = restaurant)
-                Reviews(restaurant = restaurant, onReviewSubmitted = onReviewSubmitted)
+                Reviews(restaurant = restaurant, onReviewSubmitted = onReviewSubmitted, addReview = addReview)
             }
         }
     }
@@ -110,13 +111,15 @@ fun RestaurantTitle(restaurant: Restaurant) {
 }
 
 @Composable
-fun HeaderRestaurant(restaurant: Restaurant, onGoBack: () -> Unit) {
+fun HeaderRestaurant(restaurant: Restaurant, onGoBack: () -> Unit, onFavoriteClicked: (Restaurant) -> Unit) {
     Box() {
         ImagesSlideshow(restaurant = restaurant)
         BackButton(onGoBack = onGoBack, modifier = Modifier.align(Alignment.TopStart))
         Row(modifier = Modifier.align(Alignment.TopEnd)) {
             ShareButton(restaurant = restaurant)
-            FavoriteButton(restaurant = restaurant)
+            if (uiState.currentUser.id != -1) {
+                FavoriteButton(restaurant = restaurant, onFavoriteClicked = onFavoriteClicked)
+            }
         }
     }
 }
@@ -230,29 +233,21 @@ fun BackButton(onGoBack: () -> Unit, modifier: Modifier) {
 }
 
 @Composable
-fun FavoriteButton(restaurant: Restaurant) {
-    var icon by remember { mutableStateOf(R.drawable.emptyhart) }
-    var function by remember {
-        mutableStateOf({
-            // controller.addFavorite(restaurant)
-        })
-    }
-    if (true) { // controller.getFavorites().contains(restaurant)
+fun FavoriteButton(restaurant: Restaurant, onFavoriteClicked: (Restaurant) -> Unit) {
+    var icon: Int by remember { mutableStateOf(R.drawable.emptyhart) }
+    if (uiState.currentUser.favorites.contains(restaurant.id)) {
         icon = R.drawable.fullhart
-        function = {} //controller.removeFavorite(restaurant) }
     }
     Image(painter = painterResource(id = icon), contentDescription = "hart",
         modifier = Modifier
             .padding(10.dp)
             .size(40.dp)
             .clickable {
-                function()
-                if (icon == R.drawable.emptyhart) {
-                    icon = R.drawable.fullhart
-                    function = { controller.removeFavorite(restaurant) }
+                onFavoriteClicked(restaurant)
+                icon = if (icon == R.drawable.emptyhart) {
+                    R.drawable.fullhart
                 } else {
-                    icon = R.drawable.emptyhart
-                    function = {controller.addFavorite(restaurant) }
+                    R.drawable.emptyhart
                 }
             }
     )
@@ -387,7 +382,7 @@ fun ChildFriendliness(restaurant: Restaurant) {
 
 
 @Composable
-fun Reviews(restaurant: Restaurant, onReviewSubmitted: () -> Unit) {
+fun Reviews(restaurant: Restaurant, onReviewSubmitted: () -> Unit, addReview: (Restaurant, String, Int) -> Unit) {
     SubTitle(text = stringResource(R.string.title_reviews))
     for (review in restaurant.reviews) {
         if (restaurant.reviews.indexOf(review) != 0) {
@@ -396,7 +391,7 @@ fun Reviews(restaurant: Restaurant, onReviewSubmitted: () -> Unit) {
             BasicSpacer()
         }
         Text(
-            text = review.user.firstName + " " + review.user.lastName,
+            text = review.user.username,
             fontWeight = FontWeight.Bold
         )
         Row(
@@ -408,19 +403,21 @@ fun Reviews(restaurant: Restaurant, onReviewSubmitted: () -> Unit) {
         Text(text = review.content)
     }
     BasicSpacer()
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(),
-        contentAlignment = Alignment.Center
-    ) {
-        ReviewPopup(restaurant = restaurant, onReviewSubmitted = onReviewSubmitted)
+    if (uiState.currentUser.id != -1) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            contentAlignment = Alignment.Center
+        ) {
+            ReviewPopup(restaurant = restaurant, onReviewSubmitted = onReviewSubmitted, addReview = addReview)
+        }
     }
     BasicSpacer()
 }
 
 @Composable
-fun ReviewPopup(restaurant: Restaurant, onReviewSubmitted: () -> Unit) {
+fun ReviewPopup(restaurant: Restaurant, onReviewSubmitted: () -> Unit, addReview: (Restaurant, String, Int) -> Unit) {
     var rating by remember { mutableStateOf(0) }
     var content by remember { mutableStateOf("") }
     var isPopupVisible by remember { mutableStateOf(false) }
@@ -433,11 +430,7 @@ fun ReviewPopup(restaurant: Restaurant, onReviewSubmitted: () -> Unit) {
             confirmButton = {
                 Button(
                     onClick = {
-                        controller.addReview(
-                            content = content,
-                            rating = rating,
-                            restaurant = restaurant
-                        )
+                        addReview(restaurant, content, rating)
                         isPopupVisible = false
                         isReviewSubmitted = true
                     },
@@ -493,7 +486,8 @@ fun ReviewPopup(restaurant: Restaurant, onReviewSubmitted: () -> Unit) {
     }
 
     if (isReviewSubmitted) {
-        GeneralPopup(title = "Beoordeling", content = "Bedankt voor de beoordeling!", confirmButton = "Graag gedaan!", onDismiss = {
+        GeneralPopup(title = stringResource(R.string.title_reviews), content = stringResource(R.string.reviews_thanks), confirmButton = stringResource(
+                    R.string.you_are_welcome), onDismiss = {
             isReviewSubmitted = false
             onReviewSubmitted()
         })
@@ -553,5 +547,5 @@ fun SubTitle(text: String) {
 @Preview
 @Composable
 fun RestaurantPreview() {
-    RestaurantScreen(restaurant = restaurants[0], onReviewSubmitted = { }, onGoBack = { })
+    //RestaurantScreen(restaurant = restaurants[0], onReviewSubmitted = { }, onGoBack = { }, )
 }

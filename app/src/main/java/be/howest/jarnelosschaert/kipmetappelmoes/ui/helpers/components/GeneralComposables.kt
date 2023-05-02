@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
@@ -34,7 +35,8 @@ fun TitleProfileTab(title: String, onGoBack: () -> Unit) {
         Box(modifier = Modifier.fillMaxWidth()) {
             Icon(
                 Icons.Default.ArrowBack, contentDescription = "back",
-                modifier = Modifier.align(Alignment.BottomStart)
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
                     .clickable(onClick = { onGoBack() })
                     .size(30.dp)
                     .padding(start = 0.dp),
@@ -44,7 +46,8 @@ fun TitleProfileTab(title: String, onGoBack: () -> Unit) {
                 text = title,
                 fontSize = 25.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 10.dp)
+                modifier = Modifier
+                    .padding(top = 10.dp)
                     .align(Alignment.Center),
                 color = MaterialTheme.colors.primaryVariant,
             )
@@ -53,6 +56,23 @@ fun TitleProfileTab(title: String, onGoBack: () -> Unit) {
             color = MaterialTheme.colors.primaryVariant,
             thickness = 2.dp,
             modifier = Modifier.padding(top = 10.dp)
+        )
+    }
+}
+
+@Composable
+fun NothingFound(text: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            color = MaterialTheme.colors.primary,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
 }
@@ -117,7 +137,7 @@ fun GeneralChoicePopup(
                 onClick = { onDismiss() },
                 modifier = Modifier.padding(end = 10.dp)
             ) {
-                Text(text = "Annuleren")
+                Text(text = stringResource(id = R.string.cancel))
             }
         },
     )
@@ -165,7 +185,7 @@ fun GeneralTextPopup(
                 onClick = { onDismiss() },
                 modifier = Modifier.padding(end = 10.dp)
             ) {
-                Text(text = "Annuleren")
+                Text(text = stringResource(id = R.string.cancel))
             }
         },
     )
