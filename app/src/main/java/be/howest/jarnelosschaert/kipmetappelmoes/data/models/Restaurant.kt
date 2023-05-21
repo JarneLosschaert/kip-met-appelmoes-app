@@ -18,3 +18,5 @@ data class Restaurant(
     val eatingOptions: Set<EatingOption>,
     val reviews: List<Review>
 )
+
+

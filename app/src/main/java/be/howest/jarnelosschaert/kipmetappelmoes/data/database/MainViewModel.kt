@@ -1,4 +1,4 @@
-package be.howest.jarnelosschaert.test.data
+package be.howest.jarnelosschaert.kipmetappelmoes.data.database
 
 import android.app.Application
 import androidx.lifecycle.LiveData
@@ -13,13 +13,12 @@ class MainViewModel(application: Application) : ViewModel() {
 
     val allUsers: LiveData<List<User>>
     private val repository: UserRepo
-    val searchResults: MutableLiveData<List<User>>
-
+    private val searchResults: MutableLiveData<List<User>>
 
     init {
-        val productDb = UserRoomDatabase.getInstance(application)
-        val productDao = productDb.userDao()
-        repository = UserRepo(productDao)
+        val userDb = UserRoomDatabase.getInstance(application)
+        val userDao = userDb.userDao()
+        repository = UserRepo(userDao)
 
         allUsers = repository.allUsers
         searchResults = repository.searchResults

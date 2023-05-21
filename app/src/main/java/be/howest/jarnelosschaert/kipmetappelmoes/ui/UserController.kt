@@ -3,15 +3,14 @@ package be.howest.jarnelosschaert.kipmetappelmoes.ui
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.User
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Restaurant
 import be.howest.jarnelosschaert.kipmetappelmoes.uiState
-import be.howest.jarnelosschaert.test.data.MainViewModel
+import be.howest.jarnelosschaert.kipmetappelmoes.data.database.MainViewModel
 
 class UserController(viewModel: MainViewModel) {
 
     private val userViewModel = viewModel
     private val allUsers = viewModel.allUsers
-
     fun registerUser(username: String, password: String) {
-        val user: User = User(0, username, password, listOf())
+        val user = User(0, username, password, listOf())
         userViewModel.insertUser(user)
     }
 

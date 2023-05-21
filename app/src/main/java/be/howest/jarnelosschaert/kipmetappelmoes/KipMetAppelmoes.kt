@@ -25,7 +25,7 @@ import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.*
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.profileTabs.AccountScreen
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.profileTabs.FavoritesScreen
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.profileTabs.SettingsScreen
-import be.howest.jarnelosschaert.test.data.MainViewModel
+import be.howest.jarnelosschaert.kipmetappelmoes.data.database.MainViewModel
 
 sealed class BottomNavigationScreens(val route: String, val label: String, val icon: ImageVector) {
     object Home : BottomNavigationScreens("home", "Home", Icons.Filled.Home)
@@ -44,13 +44,11 @@ sealed class OtherScreens(val route: String) {
 
 val uiState = UiState()
 
-
 @Composable
 fun KipMetAppelmoesApp(viewModel: MainViewModel) {
     HandleNotifications()
 
-    val allProducts by viewModel.allUsers.observeAsState(listOf())
-    val searchResults by viewModel.searchResults.observeAsState(listOf())
+    val allUsers by viewModel.allUsers.observeAsState(listOf())
 
     val navController = rememberNavController()
     val bottomNavigationItems = listOf(

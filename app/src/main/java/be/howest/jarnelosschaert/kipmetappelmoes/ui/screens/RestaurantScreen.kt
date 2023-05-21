@@ -262,8 +262,7 @@ fun ShareButton(restaurant: Restaurant) {
             .padding(10.dp)
             .size(40.dp)
             .clickable {
-
-                val shareText = restaurant.name
+                val shareText = restaurant.name + "\n" + "(" + restaurant.address + ")" + "\n" + "\n" + restaurant.description
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, shareText)
