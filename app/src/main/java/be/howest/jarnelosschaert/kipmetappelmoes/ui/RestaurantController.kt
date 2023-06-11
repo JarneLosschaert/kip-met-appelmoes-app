@@ -1,6 +1,5 @@
 package be.howest.jarnelosschaert.kipmetappelmoes.ui
 
-import be.howest.jarnelosschaert.kipmetappelmoes.data.DummyData
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Restaurant
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Review
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Tag

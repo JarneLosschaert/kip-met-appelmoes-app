@@ -1,16 +1,11 @@
 package be.howest.jarnelosschaert.kipmetappelmoes.ui.screens
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import be.howest.jarnelosschaert.kipmetappelmoes.R
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -21,15 +16,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
+import be.howest.jarnelosschaert.kipmetappelmoes.R
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.*
-import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.RestaurantList
-import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.TagList
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.BasicSpacer
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.NothingFound
+import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.RestaurantList
+import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components.TagList
 
 @Composable
 fun SearchScreen(

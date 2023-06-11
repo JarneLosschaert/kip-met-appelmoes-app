@@ -23,7 +23,7 @@ const val CHANNEL_ID = "kpa"
 @Composable
 fun HandleNotifications() {
     val context = LocalContext.current
-    WorkManager.getInstance(context).cancelAllWork();
+    WorkManager.getInstance(context).cancelAllWork()
 
     val notification = OneTimeWorkRequestBuilder<NotificationWorker>()
         .setInitialDelay(1, TimeUnit.DAYS)
@@ -37,8 +37,8 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
         createNotificationChannel()
 
         val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-            .setContentTitle("This is a secret message for koetie")
-            .setContentText("I Wuv uuuu <3")
+            .setContentTitle("Kip met appelmoes")
+            .setContentText("Heb je al een restaurant gevonden?")
             .setSmallIcon(R.drawable.chicken)
             .setVibrate(LongArray(0))
             .setContentIntent(getPendingIntent())
@@ -46,11 +46,6 @@ class NotificationWorker(context: Context, workerParams: WorkerParameters) : Wor
 
         val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(NOTIFICATION_ID, notification)
-
-        val nextnotification = OneTimeWorkRequestBuilder<NotificationWorker>()
-            .setInitialDelay(1, TimeUnit.DAYS)
-            .build()
-        WorkManager.getInstance(applicationContext).enqueue(nextnotification)
 
         return Result.success()
     }

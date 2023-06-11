@@ -1,17 +1,24 @@
 package be.howest.jarnelosschaert.kipmetappelmoes
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import be.howest.jarnelosschaert.kipmetappelmoes.data.UiState
+import be.howest.jarnelosschaert.kipmetappelmoes.data.database.MainViewModel
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.EatingOption
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Restaurant
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.SortType
@@ -19,13 +26,12 @@ import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Tag
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.RestaurantController
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.UserController
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.HandleNotifications
-import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.HomeScreen
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.getSortedRestaurants
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.*
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.profileTabs.AccountScreen
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.profileTabs.FavoritesScreen
+import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.profileTabs.ReviewsScreen
 import be.howest.jarnelosschaert.kipmetappelmoes.ui.screens.profileTabs.SettingsScreen
-import be.howest.jarnelosschaert.kipmetappelmoes.data.database.MainViewModel
 
 sealed class BottomNavigationScreens(val route: String, val label: String, val icon: ImageVector) {
     object Home : BottomNavigationScreens("home", "Home", Icons.Filled.Home)
@@ -175,7 +181,7 @@ private fun MainScreenNavigationConfigurations(
             )
         }
         composable(OtherScreens.Reviews.route) {
-            ReviewsScreen(modifier = modifier, onGoBack = {
+            ReviewsScreen(modifier = modifier, reviews = userController.getReviews(), onGoBack = {
                 navController.navigate(BottomNavigationScreens.Profile.route)
             })
         }

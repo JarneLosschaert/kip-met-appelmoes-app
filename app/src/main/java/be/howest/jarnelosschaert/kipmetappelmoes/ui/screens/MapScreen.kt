@@ -1,6 +1,5 @@
 package be.howest.jarnelosschaert.kipmetappelmoes.ui.screens
 
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
@@ -89,5 +88,5 @@ fun HandlePermissions(onPermissionGranted: (Boolean) -> Unit) {
 @Preview
 @Composable
 fun MapPreview() {
-    // MapScreen()
+    MapScreen(restaurants = listOf())
 }

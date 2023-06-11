@@ -1,7 +1,5 @@
 package be.howest.jarnelosschaert.kipmetappelmoes.ui.helpers.components
 
-import android.app.Activity
-import android.icu.text.CaseMap.Title
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
 import be.howest.jarnelosschaert.kipmetappelmoes.R
 
 
@@ -154,7 +151,7 @@ fun GeneralTextPopup(
     onConfirm: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    var problemText by remember { mutableStateOf("") }
+    var text by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -163,8 +160,8 @@ fun GeneralTextPopup(
             Column {
                 Text(text = label)
                 TextField(
-                    value = problemText,
-                    onValueChange = { problemText = it },
+                    value = text,
+                    onValueChange = { text = it },
                     modifier = Modifier.fillMaxWidth()
                 )
             }

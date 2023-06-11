@@ -5,10 +5,10 @@ import be.howest.jarnelosschaert.kipmetappelmoes.data.models.*
 import java.time.LocalDate
 
 object DummyData {
-    private val jari = User(1, "Jari Aap", "1234567890", listOf())
-    private val jb = User(2, "Jan Bap", "1234567890", listOf())
-    private val timmy = User(3, "Timmy Waal", "1234567890", listOf())
-    private val arthur = User(4, "Arthur Wit", "1234567890", listOf())
+    private val jari = User(1, "Jari Valentine", "1234567890", listOf())
+    private val jb = User(2, "Jan Baptiste", "1234567890", listOf())
+    private val timmy = User(3, "Timmy Ilsbroux", "1234567890", listOf())
+    private val arthur = User(4, "Arthur De Witte", "1234567890", listOf())
 
     private val review1 = Review(1, jari, "Goede bediening!", 5, LocalDate.of(2020, 1, 1))
     private val review2 = Review(2, jb, "De kroketten waren op...", 1, LocalDate.of(2022, 11, 23))

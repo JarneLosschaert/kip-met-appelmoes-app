@@ -8,7 +8,6 @@ import be.howest.jarnelosschaert.kipmetappelmoes.data.models.User
 import be.howest.jarnelosschaert.kipmetappelmoes.data.database.UserRepo
 import be.howest.jarnelosschaert.kipmetappelmoes.data.database.UserRoomDatabase
 
-
 class MainViewModel(application: Application) : ViewModel() {
 
     val allUsers: LiveData<List<User>>
@@ -39,5 +38,4 @@ class MainViewModel(application: Application) : ViewModel() {
     fun deleteUser(name: String) {
         repository.deleteUser(name)
     }
-
 }

@@ -99,6 +99,7 @@ fun StarsAndHart(restaurant: Restaurant, modifier: Modifier) {
     ) {
         Row {
             val averageRating = calculateAverageRating(restaurant)
+
             Stars(amount = averageRating)
         }
         if (uiState.currentUser.favorites.contains(restaurant.id)) {

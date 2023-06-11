@@ -4,9 +4,12 @@ import be.howest.jarnelosschaert.kipmetappelmoes.data.DummyData
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Restaurant
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Review
 import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Tag
+import be.howest.jarnelosschaert.kipmetappelmoes.data.models.User
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
 
 class DummyRestaurantRepo : IRestaurantRepo {
-
     override fun getAllRestaurants(): List<Restaurant> {
         return DummyData.restaurants
     }
@@ -36,8 +39,4 @@ class DummyRestaurantRepo : IRestaurantRepo {
             }
         }
     }
-
-
-
-
 }

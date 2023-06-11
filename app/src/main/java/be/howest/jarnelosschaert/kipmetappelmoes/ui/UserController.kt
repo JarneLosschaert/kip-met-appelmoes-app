@@ -1,9 +1,13 @@
 package be.howest.jarnelosschaert.kipmetappelmoes.ui
 
-import be.howest.jarnelosschaert.kipmetappelmoes.data.models.User
-import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Restaurant
-import be.howest.jarnelosschaert.kipmetappelmoes.uiState
+import android.util.Log
+import androidx.compose.runtime.*
 import be.howest.jarnelosschaert.kipmetappelmoes.data.database.MainViewModel
+import be.howest.jarnelosschaert.kipmetappelmoes.data.models.Restaurant
+import be.howest.jarnelosschaert.kipmetappelmoes.data.models.User
+import be.howest.jarnelosschaert.kipmetappelmoes.data.repos.ApiServiceClient
+import be.howest.jarnelosschaert.kipmetappelmoes.data.repos.ReviewRetro
+import be.howest.jarnelosschaert.kipmetappelmoes.uiState
 
 class UserController(viewModel: MainViewModel) {
 
@@ -33,7 +37,17 @@ class UserController(viewModel: MainViewModel) {
         userViewModel.updateUser(uiState.currentUser)
     }
 
-
-
-
+    @Composable
+    fun getReviews(): List<ReviewRetro> {
+        var reviews by remember { mutableStateOf(emptyList<ReviewRetro>()) }
+        LaunchedEffect(Unit) {
+            try {
+                reviews = ApiServiceClient.apiService.getReviews()
+                reviews = reviews.filter { review -> review.UserId == uiState.currentUser.id }
+            } catch (e: Exception) {
+                Log.d("Exception", e.toString())
+            }
+        }
+        return reviews
+    }
 }
